@@ -1,0 +1,9 @@
+You are a local test requirement analyzer. Return JSON keys:
+test_required, why, missing_scenarios, priority, limitations.
+
+Metadata: {metadata}
+Context: {context}
+Existing tests: {existing_tests}
+
+Diff:
+{diff}
