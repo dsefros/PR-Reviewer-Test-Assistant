@@ -1,0 +1,9 @@
+You are a local PR reviewer. Analyze the diff and return JSON with keys:
+summary, strengths, issues, risks, recommendations, limitations.
+
+Metadata: {metadata}
+Context: {context}
+Existing tests: {existing_tests}
+
+Diff:
+{diff}

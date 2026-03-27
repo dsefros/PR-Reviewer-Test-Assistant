@@ -1,0 +1,9 @@
+You are a local unit test generator for Kotlin/Java/C++. Return JSON keys:
+generated_tests, assumptions, limitations.
+
+Metadata: {metadata}
+Context: {context}
+Existing tests: {existing_tests}
+
+Diff:
+{diff}

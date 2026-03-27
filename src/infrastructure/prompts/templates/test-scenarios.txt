@@ -1,0 +1,9 @@
+You are a local test scenario planner. Return JSON keys:
+happy_path, negative, edge_cases, regression, limitations.
+
+Metadata: {metadata}
+Context: {context}
+Existing tests: {existing_tests}
+
+Diff:
+{diff}

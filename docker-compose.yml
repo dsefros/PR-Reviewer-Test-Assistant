@@ -1,0 +1,22 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./models.yaml:/app/models.yaml:ro
+      - ./logs:/app/logs
+      - ./src/infrastructure/prompts/templates:/app/src/infrastructure/prompts/templates:ro
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    profiles: ["ollama"]
+
+volumes:
+  ollama_data:
