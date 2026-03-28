@@ -161,6 +161,23 @@ tail -n 2 logs/traces.jsonl
 tail -n 2 logs/results.jsonl
 ```
 
+## Documentation
+
+- Overview: docs/overview.md
+- Setup: docs/setup.md
+- Configuration: docs/configuration.md
+- CLI: docs/cli.md
+- API: docs/api.md
+- Architecture: docs/architecture.md
+- Review flow: docs/flows/review_flow.md
+- Test check flow: docs/flows/test_check_flow.md
+- Test scenarios flow: docs/flows/test_scenarios_flow.md
+- Extension guide: docs/extension_guide.md
+- Testing: docs/testing.md
+- Observability: docs/observability.md
+- Roadmap: docs/roadmap.md
+- Known issues: docs/known_issues.md
+
 ## Configuration
 
 - `.env.example` contains runtime settings (limits, ports, logging, masking).
