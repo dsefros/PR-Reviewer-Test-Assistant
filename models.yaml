@@ -21,3 +21,35 @@ profiles:
     n_ctx: 4096
     temperature: 0.1
     max_tokens: 1500
+
+
+  local-qwen25-coder-7b:
+    backend: ollama
+    model_name: qwen2.5-coder:7b
+    base_url: http://127.0.0.1:11434
+    temperature: 0.1
+    max_tokens: 1500
+
+
+  local-qwen3-4b:
+    backend: ollama
+    model_name: qwen3:4b
+    base_url: http://127.0.0.1:11434
+    temperature: 0.1
+    max_tokens: 1500
+
+
+  local-deepseek-r1-7b:
+    backend: ollama
+    model_name: deepseek-r1:7b
+    base_url: http://127.0.0.1:11434
+    temperature: 0.1
+    max_tokens: 1500
+
+
+  local-llama31-8b:
+    backend: ollama
+    model_name: llama3.1:8b
+    base_url: http://127.0.0.1:11434
+    temperature: 0.1
+    max_tokens: 1500
