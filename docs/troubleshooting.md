@@ -58,7 +58,7 @@ tail -n 5 logs/results.jsonl
 Check:
 grep -n "ACTIVE_MODEL_PROFILE" .env
 
-Verify resolved profile:
+Verify:
 python - <<'PY'
 from src.config.models import load_model_config, clear_model_config_cache
 clear_model_config_cache()
