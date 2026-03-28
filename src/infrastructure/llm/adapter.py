@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from src.config.models import ModelProfileBase
 from src.infrastructure.llm.backends.base import LLMBackend
+from src.infrastructure.llm.output_quality import normalize_payload
 
 
 @dataclass
@@ -66,7 +67,10 @@ class LLMAdapter:
     def generate_json(self, prompt: str) -> dict:
         raw = self.generate(prompt)
         try:
-            return json.loads(raw)
+            parsed = json.loads(raw)
+            if isinstance(parsed, dict):
+                return normalize_payload(mode=self.mode, payload=parsed, prompt=prompt)
+            return {"raw_response": raw, "limitations": ["Model output JSON root was not an object."]}
         except json.JSONDecodeError:
             return {"raw_response": raw, "limitations": ["Model output was not valid JSON."]}
 

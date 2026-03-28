@@ -10,15 +10,58 @@ Do not hallucinate details not supported by the diff.
 Return JSON with EXACT keys:
 test_required, why, missing_scenarios, priority, confidence, limitations
 
-Rules:
+Grounding rules:
+- Decide test need from changed behavior, branches, validation, parsing, state transitions, and error handling.
+- Do NOT require tests just because files changed.
+- Explain reasoning in concrete changed-behavior terms.
+- Avoid generic statements (e.g., "add unit tests").
+- If diff already adds relevant tests, reflect that and avoid redundant requests.
+- Keep output concise and specific.
+
+Schema rules:
 - test_required must be boolean
 - why must be an array of short concrete reasons
 - missing_scenarios must be an array of short concrete scenarios
 - priority must be one of: low, medium, high
 - confidence must be one of: low, medium, high
 - limitations must be an array of short strings
-- no generic statements
-- keep output concise
+
+Few-shot examples (mode=test-check):
+Example A (validation branch added):
+INPUT NOTE: diff adds `if timeout <= 0: raise ValueError` and no new tests.
+OUTPUT STYLE:
+{{
+  "test_required": true,
+  "why": ["A new validation branch now raises ValueError for non-positive timeout."],
+  "missing_scenarios": ["timeout=0 raises ValueError", "timeout<0 raises ValueError", "timeout>0 still succeeds"],
+  "priority": "high",
+  "confidence": "high",
+  "limitations": []
+}}
+
+Example B (docs-only diff):
+INPUT NOTE: diff updates README and comments only.
+OUTPUT STYLE:
+{{
+  "test_required": false,
+  "why": ["No executable behavior changed in the diff."],
+  "missing_scenarios": [],
+  "priority": "low",
+  "confidence": "high",
+  "limitations": []
+}}
+
+Example C (diff already includes tests):
+INPUT NOTE: diff adds parser branch and adds matching unit tests for success/failure.
+OUTPUT STYLE:
+{{
+  "test_required": false,
+  "why": ["Changed parsing branch is already covered by newly added tests in this diff."],
+  "missing_scenarios": [],
+  "priority": "low",
+  "confidence": "medium",
+  "limitations": []
+}}
 
 Metadata: {metadata}
 Context: {context}
