@@ -31,7 +31,7 @@ def test_invalid_profile_raises(tmp_path):
         load_model_config(str(p))
 
 
-def test_model_config_cache_can_be_cleared(tmp_path):
+def test_model_config_cache_can_be_cleared(tmp_path, monkeypatch):
     p = tmp_path / "models.yaml"
     p.write_text(
         """
@@ -42,6 +42,7 @@ profiles:
     model_name: mock-v1
 """.strip()
     )
+    monkeypatch.setenv("ACTIVE_MODEL_PROFILE", "mock-default")
     clear_model_config_cache()
     _, profile = load_model_config(str(p))
     assert profile.model_name == "mock-v1"
