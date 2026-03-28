@@ -177,6 +177,7 @@ tail -n 2 logs/results.jsonl
 - Observability: docs/observability.md
 - Roadmap: docs/roadmap.md
 - Known issues: docs/known_issues.md
+- Runbook: docs/runbook.md
 
 ## Configuration
 
