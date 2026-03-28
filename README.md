@@ -24,7 +24,8 @@ A FastAPI server + thin CLI client that analyzes git diffs and supports five mod
 
 ### Key decisions
 
-- Canonical model profiles are loaded from `models.yaml`, with `ACTIVE_MODEL_PROFILE` and optional `MODEL_BACKEND` override.
+- Canonical model profiles are loaded from `models.yaml`.
+- Selection order is: `ACTIVE_MODEL_PROFILE` (if set), otherwise `models.yaml` -> `default_model`.
 - `LLMAdapter` uses lazy backend initialization so heavy runtime deps do not load in help/smoke paths.
 - Business logic is orchestrated outside API endpoints.
 - Input safety includes secret masking + diff degradation limits.
@@ -116,6 +117,10 @@ docker compose --profile ollama up --build
   - `mock`
   - `ollama`
   - `llama_cpp`
+- To explicitly choose a profile at runtime:
+  - `ACTIVE_MODEL_PROFILE=mock-default python -m src.api.main`
+  - `ACTIVE_MODEL_PROFILE=ollama-local-llama3 python -m src.api.main`
+  - `ACTIVE_MODEL_PROFILE=llama-cpp-default python -m src.api.main`
 
 ## Large Diff Strategy
 
