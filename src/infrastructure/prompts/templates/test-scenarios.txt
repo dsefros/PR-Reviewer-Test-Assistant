@@ -8,13 +8,12 @@ Do not add headings or explanations.
 Do not hallucinate details not supported by the diff.
 
 Return JSON with EXACT keys:
-happy_path, negative, edge_cases, regression, limitations
+scenarios, coverage_gaps, limitations
 
 Rules:
-- happy_path must be an array of short concrete scenario strings
-- negative must be an array of short concrete scenario strings
-- edge_cases must be an array of short concrete scenario strings
-- regression must be an array of short concrete scenario strings
+- scenarios must be an array of objects with EXACT keys: name, description, priority
+- priority must be one of: low, medium, high
+- coverage_gaps must be an array of short concrete strings
 - limitations must be an array of short strings
 - no generic statements
 - keep output concise

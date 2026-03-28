@@ -7,14 +7,7 @@ from pydantic import BaseModel, Field
 
 Mode = Literal["review", "test-check", "test-scenarios", "test-gen", "test-maintain"]
 Severity = Literal["high", "medium", "low"]
-IssueCategory = Literal[
-    "bug",
-    "design",
-    "maintainability",
-    "error_handling",
-    "regression_risk",
-    "testing",
-]
+Confidence = Literal["high", "medium", "low"]
 
 
 class AnalysisRequest(BaseModel):
@@ -26,12 +19,8 @@ class AnalysisRequest(BaseModel):
 
 class ReviewIssue(BaseModel):
     severity: Severity
-    category: IssueCategory
-    title: str
-    details: str
-    file: str
-    lines: str
-    recommendation: str
+    description: str
+    location: str
 
 
 class ReviewResponse(BaseModel):
@@ -40,6 +29,7 @@ class ReviewResponse(BaseModel):
     issues: list[ReviewIssue] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
     recommendations: list[str] = Field(default_factory=list)
+    confidence: Confidence
     limitations: list[str] = Field(default_factory=list)
 
 
@@ -48,14 +38,19 @@ class TestCheckResponse(BaseModel):
     why: list[str] = Field(default_factory=list)
     missing_scenarios: list[str] = Field(default_factory=list)
     priority: Severity
+    confidence: Confidence
     limitations: list[str] = Field(default_factory=list)
 
 
+class ScenarioItem(BaseModel):
+    name: str
+    description: str
+    priority: Severity
+
+
 class TestScenariosResponse(BaseModel):
-    happy_path: list[str] = Field(default_factory=list)
-    negative: list[str] = Field(default_factory=list)
-    edge_cases: list[str] = Field(default_factory=list)
-    regression: list[str] = Field(default_factory=list)
+    scenarios: list[ScenarioItem] = Field(default_factory=list)
+    coverage_gaps: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
 
 
