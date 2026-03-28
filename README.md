@@ -178,6 +178,7 @@ tail -n 2 logs/results.jsonl
 - Roadmap: docs/roadmap.md
 - Known issues: docs/known_issues.md
 - Runbook: docs/runbook.md
+- Troubleshooting: docs/troubleshooting.md
 
 ## Configuration
 
