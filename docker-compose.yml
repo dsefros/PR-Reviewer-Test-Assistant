@@ -1,14 +1,28 @@
 services:
   api:
     build: .
+    command: ["uvicorn", "src.api.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
     ports:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      RUNTIME_ROOT: /app
+      MODELS_CONFIG_PATH: /app/runtime/models.yaml
+      PROMPT_TEMPLATES_PATH: /app/runtime/prompts
+      LOGS_DIR: /app/runtime/logs
+      TRACES_JSONL_PATH: /app/runtime/logs/traces.jsonl
+      RESULTS_JSONL_PATH: /app/runtime/logs/results.jsonl
     volumes:
-      - ./models.yaml:/app/models.yaml:ro
-      - ./logs:/app/logs
-      - ./src/infrastructure/prompts/templates:/app/src/infrastructure/prompts/templates:ro
+      - ./models.yaml:/app/runtime/models.yaml:ro
+      - ./logs:/app/runtime/logs
+      - ./src/infrastructure/prompts/templates:/app/runtime/prompts:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=2)"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
 
   ollama:
     image: ollama/ollama:latest

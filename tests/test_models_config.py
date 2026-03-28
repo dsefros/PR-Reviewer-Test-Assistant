@@ -110,3 +110,28 @@ profiles:
     clear_model_config_cache()
     _, refreshed = load_model_config(str(p))
     assert refreshed.model_name == "mock-v2"
+
+
+def test_ollama_base_url_override_from_settings(tmp_path, monkeypatch):
+    from src.config.settings import settings
+
+    clear_model_config_cache()
+    p = tmp_path / "models.yaml"
+    p.write_text(
+        """
+default_model: ollama-default
+profiles:
+  ollama-default:
+    backend: ollama
+    model_name: llama3
+    base_url: http://127.0.0.1:11434
+""".strip()
+    )
+    monkeypatch.setattr(settings, "ollama_base_url_override", "http://ollama.internal:11434")
+    monkeypatch.setattr(settings, "active_model_profile", None)
+    try:
+        _, profile = load_model_config(str(p))
+    finally:
+        monkeypatch.setattr(settings, "ollama_base_url_override", None)
+    assert profile.backend == "ollama"
+    assert profile.base_url == "http://ollama.internal:11434"

@@ -81,7 +81,7 @@ source .venv/bin/activate
 pip install -e .[dev]
 cp .env.example .env
 cp models.yaml.example models.yaml
-uvicorn src.api.main:app --reload
+uvicorn src.api.main:create_app --factory --reload
 ```
 
 ## Package build/install validation (clean-env friendly)
@@ -98,16 +98,67 @@ If your environment allows network/index access, you can additionally use:
 pipx install .
 ```
 
-## Docker Setup
+## Docker Setup (canonical runtime path)
+
+The canonical server startup command is:
 
 ```bash
+uvicorn src.api.main:create_app --factory --host 0.0.0.0 --port 8000
+```
+
+`Dockerfile`, `docker-compose.yml`, and docs all use this same path.
+
+### Runtime contract for container deployment
+
+Required runtime settings:
+
+- `RUNTIME_ROOT` (base path used to resolve relative runtime paths)
+- `MODELS_CONFIG_PATH` (path to `models.yaml`)
+- `PROMPT_TEMPLATES_PATH` (path containing prompt `*.txt` templates)
+- `LOGS_DIR` (writable directory for product artifacts)
+- `TRACES_JSONL_PATH` / `RESULTS_JSONL_PATH` (JSONL artifact files)
+- `ACTIVE_MODEL_PROFILE` (optional; else `default_model` from `models.yaml`)
+- `OLLAMA_BASE_URL_OVERRIDE` (optional explicit override for ollama profile base URL)
+- `PERSISTENCE_ENABLED` and `JSONL_FSYNC_ENABLED` (JSONL durability controls)
+
+Bring up the API with mounted runtime files:
+
+```bash
+cp .env.example .env
 docker compose up --build
 ```
 
-Optional ollama profile:
+Optional bundled ollama profile:
 
 ```bash
 docker compose --profile ollama up --build
+```
+
+### Point API container to external Ollama
+
+If Ollama is not in the same compose project, set one of:
+
+- profile `base_url` inside `models.yaml`, or
+- `OLLAMA_BASE_URL_OVERRIDE` in `.env` (for example `http://host.docker.internal:11434`).
+
+Do not rely on `127.0.0.1` unless Ollama runs in the same network namespace as the API process.
+
+### Smoke test after `docker compose up`
+
+```bash
+curl -sS http://localhost:8000/health
+curl -sS http://localhost:8000/ready
+curl -sS http://localhost:8000/api/v1/analyze/review \\
+  -H 'content-type: application/json' \\
+  -d '{"diff":"+ return 1;","metadata":{},"context":{},"existing_tests":{}}'
+```
+
+Confirm artifact files are written in mounted storage:
+
+```bash
+ls -l logs
+tail -n 2 logs/traces.jsonl
+tail -n 2 logs/results.jsonl
 ```
 
 ## Configuration

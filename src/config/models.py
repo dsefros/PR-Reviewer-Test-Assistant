@@ -69,11 +69,13 @@ def load_model_config(path: str | None = None) -> tuple[ModelConfig, ModelProfil
     config_path = str(Path(path or settings.models_config_path).resolve())
     cfg = _load_model_config_cached(config_path)
 
-    active = os.getenv("ACTIVE_MODEL_PROFILE") or cfg.default_model
+    active = settings.active_model_profile or os.getenv("ACTIVE_MODEL_PROFILE") or cfg.default_model
 
     if active not in cfg.profiles:
         raise ValueError(f"Active model profile '{active}' not found in models config")
 
     profile_data = dict(cfg.profiles[active])
+    if profile_data.get("backend") == "ollama" and settings.ollama_base_url_override:
+        profile_data["base_url"] = settings.ollama_base_url_override
     profile = _parse_profile(active, profile_data)
     return cfg, profile
