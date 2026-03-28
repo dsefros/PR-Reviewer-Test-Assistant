@@ -10,13 +10,42 @@ Do not hallucinate details not supported by the diff.
 Return JSON with EXACT keys:
 scenarios, coverage_gaps, limitations
 
-Rules:
+Grounding rules:
+- Generate scenarios only for changed branches or changed runtime behavior in the diff.
+- Avoid generic scenarios that are not tied to the change.
+- Keep scenarios concise (roughly 2-5 max, fewer if change is small).
+- Make coverage gaps concrete and tied to changed behavior.
+- If diff is docs/comments-only, scenarios may be empty.
+
+Schema rules:
 - scenarios must be an array of objects with EXACT keys: name, description, priority
 - priority must be one of: low, medium, high
 - coverage_gaps must be an array of short concrete strings
 - limitations must be an array of short strings
-- no generic statements
 - keep output concise
+
+Few-shot examples (mode=test-scenarios):
+Example A (runtime validation branch change):
+INPUT NOTE: diff adds timeout validation branch and changes parse fallback behavior.
+OUTPUT STYLE:
+{{
+  "scenarios": [
+    {{"name": "Reject zero timeout", "description": "Parser raises ValueError when timeout is 0.", "priority": "high"}},
+    {{"name": "Reject negative timeout", "description": "Parser raises ValueError when timeout is negative.", "priority": "high"}},
+    {{"name": "Accept positive timeout", "description": "Parser accepts timeout>0 and preserves existing behavior.", "priority": "medium"}}
+  ],
+  "coverage_gaps": ["No regression check proving old success path still works with positive timeout."],
+  "limitations": []
+}}
+
+Example B (docs/config-only diff):
+INPUT NOTE: diff updates README and comments only.
+OUTPUT STYLE:
+{{
+  "scenarios": [],
+  "coverage_gaps": [],
+  "limitations": []
+}}
 
 Metadata: {metadata}
 Context: {context}
