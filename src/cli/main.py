@@ -75,5 +75,9 @@ for mode_name in MODE_REGISTRY:
     _add_mode_command(mode_name)
 
 
-if __name__ == "__main__":
+def main() -> None:
     app()
+
+
+if __name__ == "__main__":
+    main()

@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
-ai-review = "src.cli.main:app"
+ai-review = "src.cli.main:main"
 
 [tool.setuptools.packages.find]
 include = ["src*"]
