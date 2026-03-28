@@ -1,6 +1,6 @@
-# PR Reviewer + Test Assistant (Local-Only MVP)
+# PR Reviewer + Test Assistant
 
-A Dockerized local-only backend + CLI service that analyzes git diffs and supports five modes:
+A FastAPI server + thin CLI client that analyzes git diffs and supports five modes:
 
 1. `review`
 2. `test-check`
@@ -8,7 +8,8 @@ A Dockerized local-only backend + CLI service that analyzes git diffs and suppor
 4. `test-gen`
 5. `test-maintain`
 
-> This project is intentionally designed for local inference backends only (`mock`, `ollama`, `llama_cpp`) and does not require external SaaS inference.
+> Recommended production flow is remote CLI -> API server. CLI local mode is available for development only.
+> Default transport is `http`, so pass `--server-url` unless you explicitly use `--transport local`.
 
 ## Architecture Overview
 
@@ -33,9 +34,10 @@ A Dockerized local-only backend + CLI service that analyzes git diffs and suppor
 
 ### API Endpoints
 
-- `POST /review`
-- `POST /test-check`
-- `POST /test-scenarios`
+- `POST /api/v1/analyze/review`
+- `POST /api/v1/analyze/test-check`
+- `POST /api/v1/analyze/test-scenarios`
+- Legacy `POST /review`
 - `POST /test-gen`
 - `POST /test-maintain`
 - `GET /health`
@@ -63,10 +65,11 @@ Request body:
 Examples:
 
 ```bash
-git diff main...HEAD | ai-review review
-git diff main...HEAD | ai-review test-check --json
-ai-review review --diff pr.patch
-ai-review test-gen --diff pr.patch --metadata metadata.json
+git diff main...HEAD | ai-review review --server-url http://localhost:8000
+git diff main...HEAD | ai-review test-check --server-url http://localhost:8000 --json
+ai-review review --diff pr.patch --server-url http://localhost:8000
+ai-review test-gen --diff pr.patch --metadata metadata.json --server-url http://localhost:8000
+ai-review review --diff pr.patch --transport local --json
 ```
 
 ## Local Setup
@@ -78,6 +81,20 @@ pip install -e .[dev]
 cp .env.example .env
 cp models.yaml.example models.yaml
 uvicorn src.api.main:app --reload
+```
+
+## Package build/install validation (clean-env friendly)
+
+```bash
+python -m build
+pip install dist/*.whl
+ai-review --help
+```
+
+If your environment allows network/index access, you can additionally use:
+
+```bash
+pipx install .
 ```
 
 ## Docker Setup
@@ -136,3 +153,8 @@ Secret masking occurs before prompt rendering. The masker handles likely credent
 - Adjacent code context and existing tests are interface-level only (no deep parser yet).
 - Multi-pass/chunked analysis is prepared by structure, not fully implemented.
 - `llama_cpp` runtime requires optional dependency installation and local model files.
+
+
+## Quickstart
+
+See `docs/quickstart.md` for `pipx` installation and client/server run examples.

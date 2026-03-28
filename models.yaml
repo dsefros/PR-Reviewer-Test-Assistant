@@ -1,4 +1,4 @@
-default_model: ollama-local-llama3
+default_model: mock-default
 
 profiles:
   mock-default:

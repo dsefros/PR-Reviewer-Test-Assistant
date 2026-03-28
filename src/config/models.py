@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
@@ -52,11 +53,21 @@ def _parse_profile(name: str, data: dict) -> ModelProfileBase:
     raise ValueError(f"Unsupported backend: {backend}")
 
 
-def load_model_config(path: str | None = None) -> tuple[ModelConfig, ModelProfileBase]:
-    config_path = Path(path or settings.models_config_path)
-    with config_path.open("r", encoding="utf-8") as fp:
+@lru_cache(maxsize=4)
+def _load_model_config_cached(config_path: str) -> ModelConfig:
+    path = Path(config_path)
+    with path.open("r", encoding="utf-8") as fp:
         raw = yaml.safe_load(fp) or {}
-    cfg = ModelConfig(**raw)
+    return ModelConfig(**raw)
+
+
+def clear_model_config_cache() -> None:
+    _load_model_config_cached.cache_clear()
+
+
+def load_model_config(path: str | None = None) -> tuple[ModelConfig, ModelProfileBase]:
+    config_path = str(Path(path or settings.models_config_path).resolve())
+    cfg = _load_model_config_cached(config_path)
 
     env_profile = os.getenv("ACTIVE_MODEL_PROFILE") or settings.active_model_profile
     active = env_profile or cfg.default_model
