@@ -3,18 +3,17 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from typing import Literal
 
 import typer
 from pydantic import BaseModel
 
-from src.application.orchestrators.analysis_orchestrator import AnalysisOrchestrator
 from src.application.orchestrators.mode_registry import MODE_REGISTRY
-from src.config.settings import settings
+from src.cli.transports import TransportError, build_transport
 from src.domain.formatters.output_formatter import format_output
 from src.domain.models.schemas import AnalysisRequest
-from src.infrastructure.storage.repositories.jsonl import JSONLResultRepository, JSONLTraceRepository
 
-app = typer.Typer(help="Local-only PR Reviewer + Test Assistant")
+app = typer.Typer(help="Thin client for PR Reviewer + Test Assistant")
 
 
 class CliOptions(BaseModel):
@@ -24,6 +23,8 @@ class CliOptions(BaseModel):
     existing_tests: str | None = None
     output: str = "text"
     json_flag: bool = False
+    transport: Literal["http", "local"] = "http"
+    server_url: str | None = None
 
 
 def _load_json_file(path: str | None) -> dict | None:
@@ -48,11 +49,12 @@ def _run(mode: str, opts: CliOptions) -> None:
         context=_load_json_file(opts.context),
         existing_tests=_load_json_file(opts.existing_tests),
     )
-    orchestrator = AnalysisOrchestrator(
-        trace_repo=JSONLTraceRepository(settings.traces_jsonl_path),
-        result_repo=JSONLResultRepository(settings.results_jsonl_path),
-    )
-    response = orchestrator.run(mode, request)
+    try:
+        transport = build_transport(transport=opts.transport, server_url=opts.server_url)
+        response = transport.send(mode, request)
+    except TransportError as exc:
+        raise typer.BadParameter(str(exc))
+
     as_json = opts.json_flag or opts.output.lower() == "json"
     typer.echo(format_output(response, as_json=as_json))
 
@@ -65,8 +67,22 @@ def _add_mode_command(mode: str):
         existing_tests: str | None = typer.Option(None, "--existing-tests", help="Path to existing tests JSON"),
         output: str = typer.Option("text", "--output", help="text or json"),
         json_flag: bool = typer.Option(False, "--json", help="Output JSON"),
+        transport: Literal["http", "local"] = typer.Option("http", "--transport", help="http or local"),
+        server_url: str | None = typer.Option(None, "--server-url", help="Remote server URL for http transport"),
     ):
-        _run(mode, CliOptions(diff=diff, metadata=metadata, context=context, existing_tests=existing_tests, output=output, json_flag=json_flag))
+        _run(
+            mode,
+            CliOptions(
+                diff=diff,
+                metadata=metadata,
+                context=context,
+                existing_tests=existing_tests,
+                output=output,
+                json_flag=json_flag,
+                transport=transport,
+                server_url=server_url,
+            ),
+        )
 
     app.command(name=mode)(_cmd)
 
