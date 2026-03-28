@@ -40,8 +40,16 @@ class BaseTransport(ABC):
 class LocalTransport(BaseTransport):
     def __init__(self) -> None:
         self.orchestrator = AnalysisOrchestrator(
-            trace_repo=JSONLTraceRepository(settings.traces_jsonl_path),
-            result_repo=JSONLResultRepository(settings.results_jsonl_path),
+            trace_repo=JSONLTraceRepository(
+                settings.traces_jsonl_path,
+                fsync_enabled=settings.jsonl_fsync_enabled,
+                enabled=settings.persistence_enabled,
+            ),
+            result_repo=JSONLResultRepository(
+                settings.results_jsonl_path,
+                fsync_enabled=settings.jsonl_fsync_enabled,
+                enabled=settings.persistence_enabled,
+            ),
         )
 
     def send(self, mode: str, request: AnalysisRequest) -> dict[str, Any]:

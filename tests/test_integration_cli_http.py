@@ -3,7 +3,7 @@ import json
 from fastapi.testclient import TestClient
 from typer.testing import CliRunner
 
-from src.api.main import app as api_app
+from src.api.main import create_app
 from src.cli.main import app as cli_app
 
 
@@ -11,7 +11,7 @@ runner = CliRunner()
 
 
 def test_cli_http_to_api_mock(monkeypatch, tmp_path):
-    client = TestClient(api_app)
+    client = TestClient(create_app())
     diff = tmp_path / "change.patch"
     diff.write_text("+ return calculate_total(items)\n")
 

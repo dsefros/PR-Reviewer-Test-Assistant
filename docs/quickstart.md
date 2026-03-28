@@ -28,15 +28,15 @@ pipx install .
 ## 3) Run the API server
 
 ```bash
-python -m src.api.main
+uvicorn src.api.main:create_app --factory --host 0.0.0.0 --port 8000
 ```
 
 Model selection defaults to `models.yaml` -> `default_model`. To override at runtime:
 
 ```bash
-ACTIVE_MODEL_PROFILE=mock-default python -m src.api.main
-ACTIVE_MODEL_PROFILE=ollama-local-llama3 python -m src.api.main
-ACTIVE_MODEL_PROFILE=llama-cpp-default python -m src.api.main
+ACTIVE_MODEL_PROFILE=mock-default uvicorn src.api.main:create_app --factory --host 0.0.0.0 --port 8000
+ACTIVE_MODEL_PROFILE=ollama-local-llama3 uvicorn src.api.main:create_app --factory --host 0.0.0.0 --port 8000
+ACTIVE_MODEL_PROFILE=llama-cpp-default uvicorn src.api.main:create_app --factory --host 0.0.0.0 --port 8000
 ```
 
 In another shell, check health:
