@@ -15,7 +15,15 @@ class OllamaBackend(LLMBackend):
     def generate(self, prompt: str) -> str:
         response = self.client.post(
             f"{self.base_url}/api/generate",
-            json={"model": self.model_name, "prompt": prompt, "stream": False, "options": {"temperature": self.temperature}},
+            json={
+                "model": self.model_name,
+                "prompt": prompt,
+                "stream": False,
+                "format": "json",
+                "options": {
+                    "temperature": self.temperature,
+                },
+            },
         )
         response.raise_for_status()
         payload = response.json()
