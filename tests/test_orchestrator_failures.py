@@ -26,7 +26,7 @@ def _run_success(trace_repo, result_repo, monkeypatch):
     orchestrator = AnalysisOrchestrator(trace_repo=trace_repo, result_repo=result_repo)
     from src.infrastructure.llm.adapter import LLMAdapter
 
-    monkeypatch.setattr(LLMAdapter, "generate_json", lambda self, prompt: {"summary": "ok", "limitations": []})
+    monkeypatch.setattr(LLMAdapter, "generate_json", lambda self, prompt: {"summary": "ok", "confidence": "medium", "limitations": []})
     return orchestrator.run("review", AnalysisRequest(diff="+ return 1;"))
 
 

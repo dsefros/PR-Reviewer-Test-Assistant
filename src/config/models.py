@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -57,14 +58,15 @@ def load_model_config(path: str | None = None) -> tuple[ModelConfig, ModelProfil
         raw = yaml.safe_load(fp) or {}
     cfg = ModelConfig(**raw)
 
-    env_profile = settings.active_model_profile
+    env_profile = os.getenv("ACTIVE_MODEL_PROFILE") or settings.active_model_profile
     active = env_profile or cfg.default_model
 
     if active not in cfg.profiles:
         raise ValueError(f"Active model profile '{active}' not found in models config")
 
     profile_data = dict(cfg.profiles[active])
-    if settings.model_backend:
-        profile_data["backend"] = settings.model_backend
+    env_backend = os.getenv("MODEL_BACKEND") or settings.model_backend
+    if env_backend:
+        profile_data["backend"] = env_backend
     profile = _parse_profile(active, profile_data)
     return cfg, profile
