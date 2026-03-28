@@ -31,6 +31,14 @@ pipx install .
 python -m src.api.main
 ```
 
+Model selection defaults to `models.yaml` -> `default_model`. To override at runtime:
+
+```bash
+ACTIVE_MODEL_PROFILE=mock-default python -m src.api.main
+ACTIVE_MODEL_PROFILE=ollama-local-llama3 python -m src.api.main
+ACTIVE_MODEL_PROFILE=llama-cpp-default python -m src.api.main
+```
+
 In another shell, check health:
 
 ```bash

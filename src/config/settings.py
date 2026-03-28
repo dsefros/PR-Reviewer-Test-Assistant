@@ -10,8 +10,6 @@ class Settings(BaseSettings):
     max_changed_files: int = 50
     secret_masking_enabled: bool = True
     models_config_path: str = "models.yaml"
-    active_model_profile: str | None = None
-    model_backend: str | None = None
     prompt_templates_path: str = "src/infrastructure/prompts/templates"
     logs_dir: str = "logs"
     traces_jsonl_path: str = "logs/traces.jsonl"

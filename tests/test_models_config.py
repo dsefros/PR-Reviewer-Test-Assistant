@@ -1,11 +1,9 @@
-from pathlib import Path
-
 import pytest
 
 from src.config.models import clear_model_config_cache, load_model_config
 
 
-def test_load_model_config(tmp_path, monkeypatch):
+def test_uses_default_model_when_active_profile_unset(tmp_path, monkeypatch):
     clear_model_config_cache()
     p = tmp_path / "models.yaml"
     p.write_text(
@@ -17,16 +15,66 @@ profiles:
     model_name: mock-v1
 """.strip()
     )
-    monkeypatch.setenv("MODELS_CONFIG_PATH", str(p))
-    monkeypatch.setenv("ACTIVE_MODEL_PROFILE", "mock-default")
-    _, profile = load_model_config(str(p))
+    monkeypatch.delenv("ACTIVE_MODEL_PROFILE", raising=False)
+
+    cfg, profile = load_model_config(str(p))
+
+    assert cfg.default_model == "mock-default"
+    assert profile.name == "mock-default"
     assert profile.backend == "mock"
 
 
-def test_invalid_profile_raises(tmp_path):
+def test_uses_active_model_profile_override(tmp_path, monkeypatch):
+    clear_model_config_cache()
+    p = tmp_path / "models.yaml"
+    p.write_text(
+        """
+default_model: mock-default
+profiles:
+  mock-default:
+    backend: mock
+    model_name: mock-v1
+  ollama-local-llama3:
+    backend: ollama
+    model_name: llama3
+""".strip()
+    )
+    monkeypatch.setenv("ACTIVE_MODEL_PROFILE", "mock-default")
+
+    _, profile = load_model_config(str(p))
+
+    assert profile.name == "mock-default"
+    assert profile.backend == "mock"
+
+
+def test_uses_ollama_profile_override(tmp_path, monkeypatch):
+    clear_model_config_cache()
+    p = tmp_path / "models.yaml"
+    p.write_text(
+        """
+default_model: mock-default
+profiles:
+  mock-default:
+    backend: mock
+    model_name: mock-v1
+  ollama-local-llama3:
+    backend: ollama
+    model_name: llama3
+""".strip()
+    )
+    monkeypatch.setenv("ACTIVE_MODEL_PROFILE", "ollama-local-llama3")
+
+    _, profile = load_model_config(str(p))
+
+    assert profile.name == "ollama-local-llama3"
+    assert profile.backend == "ollama"
+
+
+def test_invalid_profile_raises(tmp_path, monkeypatch):
     clear_model_config_cache()
     p = tmp_path / "models.yaml"
     p.write_text("default_model: x\nprofiles: {}")
+    monkeypatch.setenv("ACTIVE_MODEL_PROFILE", "missing-profile")
     with pytest.raises(ValueError):
         load_model_config(str(p))
 
