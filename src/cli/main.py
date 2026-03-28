@@ -8,6 +8,7 @@ import typer
 from pydantic import BaseModel
 
 from src.application.orchestrators.analysis_orchestrator import AnalysisOrchestrator
+from src.application.orchestrators.mode_registry import MODE_REGISTRY
 from src.config.settings import settings
 from src.domain.formatters.output_formatter import format_output
 from src.domain.models.schemas import AnalysisRequest
@@ -70,7 +71,7 @@ def _add_mode_command(mode: str):
     app.command(name=mode)(_cmd)
 
 
-for mode_name in ["review", "test-check", "test-scenarios", "test-gen", "test-maintain"]:
+for mode_name in MODE_REGISTRY:
     _add_mode_command(mode_name)
 
 
