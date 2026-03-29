@@ -129,6 +129,7 @@ profiles:
     )
     monkeypatch.setattr(settings, "ollama_base_url_override", "http://ollama.internal:11434")
     monkeypatch.setattr(settings, "active_model_profile", None)
+    monkeypatch.delenv("ACTIVE_MODEL_PROFILE", raising=False)
     try:
         _, profile = load_model_config(str(p))
     finally:

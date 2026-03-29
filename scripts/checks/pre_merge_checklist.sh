@@ -15,8 +15,8 @@ trap cleanup EXIT
 
 mkdir -p logs
 
-echo "[1/7] Unit tests"
-pytest
+echo "[1/7] Unit tests (hermetic mock profile)"
+ACTIVE_MODEL_PROFILE=mock-default OLLAMA_BASE_URL_OVERRIDE= MODELS_CONFIG_PATH=models.yaml RUNTIME_ROOT=. PROMPT_TEMPLATES_PATH=src/infrastructure/prompts/templates LOGS_DIR=logs TRACES_JSONL_PATH=logs/traces.jsonl RESULTS_JSONL_PATH=logs/results.jsonl pytest
 
 echo "[2/7] Docker build"
 docker build -t "$IMAGE_TAG" .

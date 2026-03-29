@@ -95,6 +95,8 @@ bash scripts/checks/pre_merge_checklist.sh
 bash scripts/dev/redeploy_dev_local.sh
 ```
 
+`dev-latest` exists only after a successful workflow run on `main`; run at least one `main` push first.
+
 ## 15. Prod deploy and rollback on server
 
 Deploy latest prod tag:

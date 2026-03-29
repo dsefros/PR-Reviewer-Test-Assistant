@@ -166,7 +166,7 @@ tail -n 2 logs/results.jsonl
 
 - Branch policy and operational flow are documented in `docs/release_flow.md`.
 - Mandatory pre-merge local checks: `bash scripts/checks/pre_merge_checklist.sh`.
-- Local dev redeploy from GHCR dev image: `bash scripts/dev/redeploy_dev_local.sh`.
+- Local dev redeploy from GHCR dev image: `bash scripts/dev/redeploy_dev_local.sh` (works after the workflow has produced `dev-latest` from a `main` push).
 - Production deploy script (used by prod branch auto-deploy): `bash scripts/prod/deploy_prod.sh prod-<sha>` (deterministic tag deploy).
 - Production rollback script: `bash scripts/prod/rollback_prod.sh prod-<sha>`.
 

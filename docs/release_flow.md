@@ -17,7 +17,7 @@ bash scripts/checks/pre_merge_checklist.sh
 
 Checklist steps performed by the script:
 
-1. `pytest` unit test run.
+1. `pytest` unit test run with explicit test-safe env overrides (`ACTIVE_MODEL_PROFILE=mock-default` etc.) so local runtime env does not leak into tests.
 2. Docker image build from current branch.
 3. Local container startup.
 4. `/health` verification.
@@ -58,6 +58,7 @@ bash scripts/dev/redeploy_dev_local.sh
 What it does:
 
 - Pulls `dev-latest` from GHCR.
+- Note: `dev-latest` is created only after this workflow runs on `main`. Before first `main` run after merge, redeploy will fail because the tag does not yet exist.
 - Stops/removes existing local dev container if present.
 - Starts new local container with `.env`.
 - Preserves Ollama connectivity via `host.docker.internal` mapping.
