@@ -1,0 +1,22 @@
+services:
+  api:
+    image: ghcr.io/dsefros/pr-reviewer-test-assistant:${IMAGE_TAG:-prod-latest}
+    restart: unless-stopped
+    command: ["uvicorn", "src.api.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      RUNTIME_ROOT: /app
+      MODELS_CONFIG_PATH: /app/runtime/models.yaml
+      PROMPT_TEMPLATES_PATH: /app/runtime/prompts
+      LOGS_DIR: /app/runtime/logs
+      TRACES_JSONL_PATH: /app/runtime/logs/traces.jsonl
+      RESULTS_JSONL_PATH: /app/runtime/logs/results.jsonl
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./models.yaml:/app/runtime/models.yaml:ro
+      - ./logs:/app/runtime/logs
+      - ./src/infrastructure/prompts/templates:/app/runtime/prompts:ro
