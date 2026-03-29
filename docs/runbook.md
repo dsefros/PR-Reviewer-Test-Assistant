@@ -80,3 +80,32 @@ cd ~/PR-Reviewer-Test-Assistant
 git pull --ff-only origin main
 docker compose -f docker-compose.registry.yml pull
 docker compose -f docker-compose.registry.yml up -d
+
+## 13. Mandatory pre-merge checks (local dev)
+
+Run from repository root before merging to `main`:
+
+```bash
+bash scripts/checks/pre_merge_checklist.sh
+```
+
+## 14. Laptop dev redeploy from GHCR dev image
+
+```bash
+bash scripts/dev/redeploy_dev_local.sh
+```
+
+## 15. Prod deploy and rollback on server
+
+Deploy latest prod tag:
+
+```bash
+bash scripts/prod/deploy_prod.sh prod-<sha-from-prod-build>
+```
+
+Rollback to a specific immutable prod image tag:
+
+```bash
+bash scripts/prod/rollback_prod.sh prod-<sha>
+```
+
