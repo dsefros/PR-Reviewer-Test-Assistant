@@ -171,6 +171,7 @@ tail -n 2 logs/results.jsonl
 - Production rollback script: `bash scripts/prod/rollback_prod.sh prod-<sha>`.
 
 ## Documentation
+- Developer workflow: docs/developer_workflow.md
 
 - Overview: docs/overview.md
 - Setup: docs/setup.md
