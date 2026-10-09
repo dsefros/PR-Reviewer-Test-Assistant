@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DS Chat Digest — сервис ежедневных AI-итогов обсуждений Telegram-чата.">
+<title>DS Chat Digest — итоги обсуждений Telegram-чата</title>
+<style>
+  :root{color-scheme:light;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#203040;background:#f6f8fb}
+  *{box-sizing:border-box}
+  body{margin:0;line-height:1.7}
+  main{max-width:820px;margin:6vh auto 8vh;padding:0 24px}
+  article{background:white;border:1px solid #e5e9f0;border-radius:18px;padding:clamp(24px,5vw,52px);box-shadow:0 8px 32px rgba(15,38,66,.04)}
+  h1{font-size:clamp(28px,5vw,42px);line-height:1.2;letter-spacing:-.025em;margin:.2em 0 .6em}
+  h2{font-size:21px;line-height:1.35;margin-top:2rem}
+  h3{font-size:17px}
+  p,li{font-size:16px}
+  ul,ol{padding-left:24px}
+  li{margin-bottom:.6em}
+  a{color:#185abc;text-decoration-thickness:1px;text-underline-offset:3px}
+  a:hover{text-decoration-thickness:2px}
+  .eyebrow{color:#4871a2;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+  .lede{font-size:18px;color:#44576b}
+  .note{background:#f0f5fd;border-left:3px solid #3c71b1;padding:12px 18px;border-radius:4px;font-size:15px}
+  footer{font-size:14px;color:#607185;margin-top:40px;border-top:1px solid #e5e9f0;padding-top:20px}
+  .nav{display:flex;flex-wrap:wrap;gap:14px;margin:25px 0}
+  @media(prefers-color-scheme:dark){:root{color-scheme:dark;color:#ecf0f6;background:#101822}article{background:#1a2735;border-color:#344252}a{color:#9cc9ff}.lede,footer{color:#b2c0ce}.eyebrow{color:#9cc9ff}.note{background:#1a344b;border-left-color:#79b2ed}footer{border-top-color:#344252}}
+</style>
+</head>
+<body><main><article>
+<p class="eyebrow">DS Chat Digest</p>
+<h1>Итоги обсуждений Telegram-чата</h1>
+<p class="lede">DS Chat Digest — вспомогательный сервис для подготовки ежедневной сводки тем, которые обсуждали участники Telegram-сообщества. AI помогает выделить содержательные беседы и сохранить ссылки на исходные сообщения.</p>
+<nav class="nav"><a href="./privacy.html">Политика конфиденциальности</a><a href="#terms">Условия использования</a></nav>
+<h2>Как работает сервис</h2>
+<ol>
+<li>Telegram-бот собирает сообщения выбранного чата и готовит структурированный снимок обсуждений.</li>
+<li>Бот сохраняет <code>input.json</code> во временной папке Google Drive, выделенной для дайджестов.</li>
+<li>Подключённый к Google Drive ChatGPT анализирует входные данные и записывает <code>result.json</code> с краткими историями, участниками и ссылками на исходные сообщения.</li>
+<li>Бот проверяет результат и доставляет дайджест администраторам или в чат в зависимости от текущих настроек.</li>
+</ol>
+<h2>Для чего нужен доступ к Google Drive</h2>
+<p>Google Drive используется как файловый канал обмена между ботом и обработкой в ChatGPT. Приложение работает с заранее указанной папкой дайджестов и её вложениями. OAuth-разрешение Google Drive технически является широким; сервис не предназначен для чтения или изменения прочих личных файлов владельца Drive.</p>
+<p>Подробности об используемых данных, внешних сервисах, хранении и обращениях — в <a href="./privacy.html">политике конфиденциальности</a>.</p>
+<h2 id="terms">Условия использования</h2>
+<p>Сервис предназначен для администраторов подключённого Telegram-сообщества, а не для общедоступного самостоятельного использования. Результаты ИИ могут содержать ошибки и должны проверяться администратором перед использованием. Пользователи чата должны быть уведомлены о применении анализа переписки в соответствии с правилами сообщества и применимыми требованиями.</p>
+<p lang="en" class="note">DS Chat Digest is an administrator-operated tool that summarizes Telegram group discussions. Google Drive serves only as an intermediate file exchange for digest input and result files. See the <a href="./privacy.html">Privacy Policy</a>.</p>
+<footer>DS Chat Digest · OAuth application: DS Chat Digest TEST · <a href="mailto:dsefros@yandex.ru">Связаться с администратором</a></footer>
+</article></main></body></html>

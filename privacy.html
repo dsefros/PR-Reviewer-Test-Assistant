@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Политика конфиденциальности DS Chat Digest: Telegram, Google Drive и AI-обработка сообщений.">
+<title>Политика конфиденциальности — DS Chat Digest</title>
+<style>
+  :root{color-scheme:light;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#203040;background:#f6f8fb}
+  *{box-sizing:border-box}
+  body{margin:0;line-height:1.7}
+  main{max-width:820px;margin:6vh auto 8vh;padding:0 24px}
+  article{background:white;border:1px solid #e5e9f0;border-radius:18px;padding:clamp(24px,5vw,52px);box-shadow:0 8px 32px rgba(15,38,66,.04)}
+  h1{font-size:clamp(28px,5vw,42px);line-height:1.2;letter-spacing:-.025em;margin:.2em 0 .6em}
+  h2{font-size:21px;line-height:1.35;margin-top:2rem}
+  h3{font-size:17px}
+  p,li{font-size:16px}
+  ul,ol{padding-left:24px}
+  li{margin-bottom:.6em}
+  a{color:#185abc;text-decoration-thickness:1px;text-underline-offset:3px}
+  a:hover{text-decoration-thickness:2px}
+  .eyebrow{color:#4871a2;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px}
+  .lede{font-size:18px;color:#44576b}
+  .note{background:#f0f5fd;border-left:3px solid #3c71b1;padding:12px 18px;border-radius:4px;font-size:15px}
+  footer{font-size:14px;color:#607185;margin-top:40px;border-top:1px solid #e5e9f0;padding-top:20px}
+  .nav{display:flex;flex-wrap:wrap;gap:14px;margin:25px 0}
+  @media(prefers-color-scheme:dark){:root{color-scheme:dark;color:#ecf0f6;background:#101822}article{background:#1a2735;border-color:#344252}a{color:#9cc9ff}.lede,footer{color:#b2c0ce}.eyebrow{color:#9cc9ff}.note{background:#1a344b;border-left-color:#79b2ed}footer{border-top-color:#344252}}
+</style>
+</head>
+<body><main><article>
+<p class="eyebrow">DS Chat Digest · Privacy Policy</p>
+<h1>Политика конфиденциальности</h1>
+<p class="lede">Дата публикации: 9 октября 2026 года. Эта страница описывает работу компонента DS Chat Digest для обмена файлами через Google Drive и подготовки ежедневных сводок Telegram-чата.</p>
+<nav class="nav"><a href="./index.html">Главная страница</a><a href="mailto:dsefros@yandex.ru">Контакт администратора</a></nav>
+<h2>1. Какие данные обрабатываются</h2>
+<p>Для подготовки дайджестов обрабатываются сообщения выбранного Telegram-чата: текст, идентификаторы сообщений и авторов, отображаемые имена, время отправки, сведения об ответах и ссылки на обсуждения. Также создаются технические идентификаторы дайджестов, входные снимки и результаты анализа.</p>
+<h2>2. Для чего используются данные</h2>
+<p>Только для выделения тем обсуждений, формирования краткого ежедневного дайджеста, проверки ссылок на исходные сообщения и доставки результатов согласно настройкам сообщества. Сервис не предназначен для рекламы или продажи данных пользователей.</p>
+<h2>3. Доступ к данным Google Drive</h2>
+<p>OAuth-приложение запрашивает Google Drive scope <code>https://www.googleapis.com/auth/drive</code>, который технически может предоставлять широкий доступ к Drive подключённого Google-аккаунта. Реальная логика DS Chat Digest ограничена заранее настроенной папкой <code>DS Chat Digest PROD</code> и её вложениями.</p>
+<p>В ней бот может создавать папки по датам и идентификаторам дайджестов, загружать <code>input.json</code>, проверять и читать <code>result.json</code>, а также удалять устаревшие файлы дайджеста. Сервис не предназначен для поиска, чтения или изменения несвязанных файлов Drive.</p>
+<h2>4. Передача данных внешним сервисам</h2>
+<p>Для выполнения описанной функции используются Telegram (источник сообщений и доставка), Google Drive (временное хранение файлов) и ChatGPT/OpenAI (анализ содержимого снимка и формирование результата). Эти сервисы обрабатывают данные в рамках собственных условий и настроек; обработка может происходить за пределами страны проживания участников.</p>
+<h2>5. Хранение и удаление</h2>
+<p>Сообщения могут временно храниться в базе данных бота, а JSON-снимки — в выделенной папке Google Drive. В серверной реализации предусмотрена плановая очистка входных файлов старше 7 дней и файлов результатов старше 30 дней. Сроки фактического удаления могут изменяться из-за ошибок выполнения, резервного копирования или требований к разбору инцидентов. Это не означает немедленного удаления данных из систем внешних провайдеров.</p>
+<h2>6. Доступ и безопасность</h2>
+<p>Доступ к рабочим настройкам сервиса и Google OAuth-реквизитам должен быть ограничен администраторами. Данные Google Drive не публикуются на этом сайте. Владелец Google-аккаунта может отозвать доступ приложения в настройках безопасности Google; после отзыва функции обмена файлами перестанут работать до повторной авторизации.</p>
+<h2>7. Запросы и изменения политики</h2>
+<p>Для вопросов об обработке данных, исправлении или запросе удаления напишите администратору: <a href="mailto:dsefros@yandex.ru">dsefros@yandex.ru</a>. Запрос будет рассмотрен в пределах прав и технических возможностей администратора. При изменении способа работы сервиса политика может обновляться; актуальная редакция размещается по этому адресу.</p>
+<h2>English summary</h2>
+<p lang="en">DS Chat Digest analyzes messages from an administrator-selected Telegram group to create a daily summary. Data may include Telegram message text, message and author IDs, displayed names, timestamps and reply relationships. Data is used for summarization and digest delivery, not for advertising or sale. The bot uses an administrator-configured Google Drive folder to exchange <code>input.json</code> and <code>result.json</code> with ChatGPT/OpenAI. The OAuth scope allows broad Drive access, but the bot is designed to operate only within its configured digest folder. Temporary files are subject to scheduled cleanup. Questions or deletion requests: <a href="mailto:dsefros@yandex.ru">dsefros@yandex.ru</a>.</p>
+<footer>DS Chat Digest · <a href="./index.html">На главную</a></footer>
+</article></main></body></html>
